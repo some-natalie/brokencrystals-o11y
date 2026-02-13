@@ -1,0 +1,55 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+  batch/metrics:
+    timeout: 60s
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: ${env:ELASTIC_APM_ENVIRONMENT}
+        action: upsert
+
+exporters:
+  elasticsearch:
+    endpoints:
+      - ${env:ELASTIC_ENDPOINT}
+    user: ${env:ELASTIC_USERNAME}
+    password: ${env:ELASTIC_PASSWORD}
+    logs_index: logs-apm.app-default
+    traces_index: traces-apm-default
+    metrics_index: metrics-apm.app-default
+    mapping:
+      mode: ecs
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+extensions:
+  health_check:
+    endpoint: :13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch, resource]
+      exporters: [elasticsearch]
+    metrics:
+      receivers: [otlp]
+      processors: [batch/metrics, resource]
+      exporters: [elasticsearch]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [elasticsearch]

@@ -1,0 +1,35 @@
+filebeat.inputs:
+  - type: filestream
+    id: ollama-container-logs
+    paths:
+      - '/var/lib/docker/containers/*/*.log'
+    parsers:
+      - container:
+          stream: all
+          format: auto
+    processors:
+      - add_docker_metadata:
+          host: 'unix:///var/run/docker.sock'
+      - add_fields:
+          target: ''
+          fields:
+            service.name: ollama
+            service.type: ai-model
+
+output.elasticsearch:
+  hosts: ['http://host.docker.internal:9200']
+  username: 'elastic'
+  password: 'Tn99rhPs'
+  index: 'filebeat-ollama-%{+yyyy.MM.dd}'
+
+setup.ilm.enabled: false
+setup.template.name: 'filebeat-ollama'
+setup.template.pattern: 'filebeat-ollama-*'
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
