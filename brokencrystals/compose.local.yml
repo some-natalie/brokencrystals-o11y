@@ -251,7 +251,7 @@ services:
       timeout: 10s
       start_period: 60s
     ports:
-      - '11434:11434'
+      - '11435:11434'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     labels:

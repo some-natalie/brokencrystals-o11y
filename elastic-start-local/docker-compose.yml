@@ -92,7 +92,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    image: otel/opentelemetry-collector-contrib:0.115.1
+    image: otel/opentelemetry-collector-contrib:0.145.0
     container_name: otel-collector
     ports:
       - "4317:4317" # OTLP gRPC
@@ -110,10 +110,10 @@ services:
     volumes:
       - ./config/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133"]
+      test: ["CMD", "/otelcol-contrib", "--version"]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 30
 
 volumes:
   dev-elasticsearch:
