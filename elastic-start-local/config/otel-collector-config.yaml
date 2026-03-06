@@ -13,6 +13,7 @@ processors:
   batch/metrics:
     timeout: 60s
     send_batch_size: 512
+  elasticapm: {}
   resource:
     attributes:
       - key: deployment.environment
@@ -49,7 +50,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch, resource]
+      processors: [batch, elasticapm, resource]
       exporters: [elasticapm, elasticsearch/otel]
     metrics:
       receivers: [otlp]
