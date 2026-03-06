@@ -12,44 +12,54 @@ processors:
     send_batch_size: 512
   batch/metrics:
     timeout: 60s
+    send_batch_size: 512
   resource:
     attributes:
       - key: deployment.environment
         value: ${env:ELASTIC_APM_ENVIRONMENT}
         action: upsert
 
+connectors:
+  elasticapm: {}
+
+extensions:
+  apmconfig:
+    source:
+      elasticsearch:
+        endpoint: http://${env:ELASTIC_USERNAME}:${env:ELASTIC_PASSWORD}@elasticsearch:9200
+        cache_duration: 30s
+    opamp:
+      protocols:
+        http:
+          endpoint: 0.0.0.0:4320
+  health_check:
+    endpoint: :13133
+
 exporters:
-  elasticsearch:
+  elasticsearch/otel:
     endpoints:
       - ${env:ELASTIC_ENDPOINT}
     user: ${env:ELASTIC_USERNAME}
     password: ${env:ELASTIC_PASSWORD}
-    logs_index: logs-apm.app-default
-    traces_index: traces-apm-default
-    metrics_index: metrics-apm.app-default
     mapping:
-      mode: ecs
-  debug:
-    verbosity: detailed
-    sampling_initial: 5
-    sampling_thereafter: 200
-
-extensions:
-  health_check:
-    endpoint: :13133
+      mode: otel
 
 service:
-  extensions: [health_check]
+  extensions: [apmconfig, health_check]
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch, resource]
-      exporters: [elasticsearch]
+      exporters: [elasticapm, elasticsearch/otel]
     metrics:
       receivers: [otlp]
       processors: [batch/metrics, resource]
-      exporters: [elasticsearch]
+      exporters: [elasticsearch/otel]
     logs:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [elasticsearch]
+      processors: [batch, resource]
+      exporters: [elasticapm, elasticsearch/otel]
+    metrics/aggregated-otel-metrics:
+      receivers: [elasticapm]
+      processors: []
+      exporters: [elasticsearch/otel]

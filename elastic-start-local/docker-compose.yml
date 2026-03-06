@@ -92,7 +92,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    image: otel/opentelemetry-collector-contrib:0.145.0
+    image: docker.elastic.co/elastic-agent/elastic-otel-collector:${ES_LOCAL_VERSION}
     container_name: otel-collector
     ports:
       - "4317:4317" # OTLP gRPC
