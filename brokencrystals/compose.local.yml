@@ -22,6 +22,7 @@ services:
 
   filebeat-postgres:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/postgres.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -52,6 +53,7 @@ services:
 
   filebeat-keycloak-db:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/keycloak-db.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -100,6 +102,7 @@ services:
 
   filebeat-keycloak:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/keycloak.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -165,6 +168,7 @@ services:
 
   filebeat-nodejs:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/nodejs.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -197,6 +201,7 @@ services:
 
   filebeat-grpcwebproxy:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/grpcwebproxy.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -230,6 +235,7 @@ services:
 
   filebeat-mailcatcher:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/mailcatcher.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -263,6 +269,7 @@ services:
 
   filebeat-ollama:
     image: docker.elastic.co/beats/filebeat:9.3.1
+    command: filebeat -e --strict.perms=false
     user: root
     volumes:
       - './config/filebeat/ollama.yml:/usr/share/filebeat/filebeat.yml:ro'
