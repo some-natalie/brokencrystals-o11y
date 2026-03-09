@@ -21,7 +21,7 @@ services:
       co.elastic.logs/enabled: 'true'
 
   filebeat-postgres:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/postgres.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -51,7 +51,7 @@ services:
       co.elastic.logs/enabled: 'true'
 
   filebeat-keycloak-db:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/keycloak-db.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -99,7 +99,7 @@ services:
         condition: service_healthy
 
   filebeat-keycloak:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/keycloak.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -164,7 +164,7 @@ services:
         condition: service_healthy
 
   filebeat-nodejs:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/nodejs.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -196,7 +196,7 @@ services:
       - nodejs
 
   filebeat-grpcwebproxy:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/grpcwebproxy.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -229,7 +229,7 @@ services:
         max-size: '10m'
 
   filebeat-mailcatcher:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/mailcatcher.yml:/usr/share/filebeat/filebeat.yml:ro'
@@ -251,7 +251,7 @@ services:
       timeout: 10s
       start_period: 60s
     ports:
-      - '11435:11434'
+      - '11434:11434'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     labels:
@@ -262,7 +262,7 @@ services:
         max-size: '10m'
 
   filebeat-ollama:
-    image: docker.elastic.co/beats/filebeat:9.3.0
+    image: docker.elastic.co/beats/filebeat:9.3.1
     user: root
     volumes:
       - './config/filebeat/ollama.yml:/usr/share/filebeat/filebeat.yml:ro'

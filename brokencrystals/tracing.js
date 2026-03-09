@@ -105,9 +105,10 @@ const sdk = new NodeSDK({
       '@opentelemetry/instrumentation-http': {
         enabled: true,
         requestHook: (span, request) => {
-          // Add user agent to span
-          if (request.headers && request.headers['user-agent']) {
-            span.setAttribute('http.user_agent', request.headers['user-agent']);
+          const headers = request.headers || {};
+          for (const [name, value] of Object.entries(headers)) {
+            const key = `http.request.header.${name.toLowerCase()}`;
+            span.setAttribute(key, Array.isArray(value) ? value : [value]);
           }
         },
         applyCustomAttributesOnSpan: (span, request) => {
@@ -119,13 +120,22 @@ const sdk = new NodeSDK({
             );
           }
         },
-        // Add response hook for error handling
+        // Add response hook for error handling and response headers
         responseHook: (span, response) => {
           if (response.statusCode >= 400) {
             span.setStatus({
               code: response.statusCode >= 500 ? 2 : 1, // ERROR : OK with error flag
               message: `HTTP ${response.statusCode}`
             });
+          }
+          // Capture response headers
+          const headers =
+            typeof response.getHeaders === 'function'
+              ? response.getHeaders()
+              : response.headers || {};
+          for (const [name, value] of Object.entries(headers)) {
+            const key = `http.response.header.${name.toLowerCase()}`;
+            span.setAttribute(key, Array.isArray(value) ? value : [String(value)]);
           }
         }
       },
